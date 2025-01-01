@@ -1,5 +1,6 @@
 package com.thinkconstructive.restapplication.service.impl;
 
+import com.thinkconstructive.restapplication.exception.CloudVendorNotFoundException;
 import com.thinkconstructive.restapplication.model.CloudVendor;
 import com.thinkconstructive.restapplication.repository.CloudVendorRepository;
 import com.thinkconstructive.restapplication.service.CloudVendorService;
@@ -33,6 +34,10 @@ public class CloudVendorServiceImpl implements CloudVendorService {
     @Override
     public String deleteCloudVendor(String cloudVendorId) {
         //More Business Logic
+        if(cloudVendorRepository.findById(cloudVendorId).isEmpty()){
+            throw  new CloudVendorNotFoundException("Requested Cloud Vendor Doesn't exist");
+        }
+
         cloudVendorRepository.deleteById(cloudVendorId);
         return "Successfully deleted.";
     }
@@ -40,12 +45,20 @@ public class CloudVendorServiceImpl implements CloudVendorService {
     @Override
     public CloudVendor getCloudVendor(String cloudVendorId) {
         //More Business Logic
+        if(cloudVendorRepository.findById(cloudVendorId).isEmpty()){
+            throw new CloudVendorNotFoundException("Requested Cloud Vendor Doesn't exist");
+        }
+
         return cloudVendorRepository.findById(cloudVendorId).get();
     }
 
     @Override
     public List<CloudVendor> getAllCloudVendors() {
         //More Business Logic
+        if(cloudVendorRepository.findAll().isEmpty()){
+            throw new CloudVendorNotFoundException("No Cloud Vendors present in database");
+        }
+
         return cloudVendorRepository.findAll();
     }
 }
